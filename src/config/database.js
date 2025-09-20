@@ -1,15 +1,12 @@
 import mongoose from "mongoose";
 
-const initDB = async () => {
+export const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect("mongodb://127.0.0.1:27017/GB");
+    // para borrar toda la base de datos
+    // await mongoose.connection.dropDatabase();
+    console.log("Conectado a la base de datos");
   } catch (error) {
-    console.error("❌ Error al conectar a MongoDB:", error.message);
-    process.exit(1); // Detiene la app si no puede conectar
+    console.log("No se pudo conectar a la base de datos", error);
   }
 };
-
-export default initDB;

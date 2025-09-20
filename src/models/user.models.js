@@ -53,6 +53,11 @@ const Userschema = new Schema({
             required: false,
         }
     }
-})
+},
+{
+    timestamps: true,
+    versionKey: false,
+},
+)
 
 export const User = model('User', Userschema)

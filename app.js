@@ -1,5 +1,5 @@
 import express from 'express';
-import  initDB  from './src/config/database.js';
+import  {connectDB}  from './src/config/database.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
@@ -15,6 +15,6 @@ app.use(cors());
 app.use("/api", routes)
 
 app.listen(PORT, async () => {
-  await initDB();
+  await connectDB();
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
