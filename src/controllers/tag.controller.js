@@ -1,34 +1,37 @@
-import { Article } from "../models/article.models.js";
+import { Tag } from "../models/tag.models.js";
 
-export const createArticle = async (req, res) => {
-    const {title, content,excerpt,status,author,tags} = req.body;
-  
+
+export const createTag = async (req, res) => {
+    const {name,description} = req.body;
     try {
-          if(!title || !content  || !status || !author){
-        return res.status(400).json({
-            ok: false,
-            msg: "Todos los campos son necesarios",})
-    }
-        const article = await Article.create({title, content,excerpt,status,author,tags})
+        if(name === "" || name === undefined || description === "" || description === undefined){
+            return res.status(400).json({
+                ok: false,
+                msg: "todos los campos son requeridos"
+            })
+        }
+        const tag = await Tag.create({name, description});
         return res.status(201).json({
             ok: true,
-            msg: "Articulo creado",
-            data: article
+            msg: "Tag creado exitosamente",
+            data: tag,
         })
-    }catch(error){
+    } catch (error) {
         console.log(error);
-        res.status(500).json({
-            ok: false,
+        return res.status(500).json({
+            ok:false,
             msg: "Error del servidor",
         })
+
     }
+    
 }
-export const getAllArticle = async (req, res) => {
+export const getAllTags = async (req, res) => {
     try {
-        const articles = await Article.find().populate('author');
+        const tags = await Tag.find();
         return res.json({
             ok:true,
-            data: articles
+            data: tags,
         })
 
     } catch (error) {
@@ -40,7 +43,7 @@ export const getAllArticle = async (req, res) => {
     }
     
 }
-export const getArticleById = async (req,res) => {
+export const getTagById = async (req,res) => {
     const {id} = req.params;
     try {
         if(!id){
@@ -48,11 +51,10 @@ export const getArticleById = async (req,res) => {
                 msg:"ID invalido, coloque un ID existente"
             })
         }
-        const article = await Article.findById(id).populate('author');
-        console.log(article)
+        const tag = await Tag.findById(id);
         return res.status(200).json({
             ok:true,
-            data: article,
+            data: tag
         })
     } catch (error) {
         console.log(error);
@@ -62,25 +64,25 @@ export const getArticleById = async (req,res) => {
         })
     }
 }
-export const updateArticle = async (req, res) => {
+export const updateTag = async (req, res) => {
     const {id} = req.params;
-    const {title, content} = req.body;
+    const {name, description} = req.body;
     try {
-         if(!id || !title || !content){
+         if(!id || !name || !description){
             return res.status(400).json({
-                msg:"ID invalido o los campos requeridos estan vacios"
+                msg:"ID invaido o los campos requeridos estan vacios"
             })
         }
-        const article = await Article.findByIdAndUpdate(
+        const tag = await Tag.findByIdAndUpdate(
             id,
-            {title, content},
+            {name, description},
             {new: true}
 
         )
         return res.status(201).json({
             ok:true,
-            msg:"Usuario actualizado con exito",
-            data: article,
+            msg:"Tag actualizado con exito",
+            data: tag,
         })
     } catch (error) {
         console.log(error);
@@ -91,19 +93,19 @@ export const updateArticle = async (req, res) => {
     }
     
 }
-export const deleteArticle = async (req, res) => {
+export const deleteTag = async (req, res) => {
     const {id} = req.params;
     try {
            if(!id){
             return res.status(400).json({
-                msg:"Articulo ya eliminado o el ID proporcionado es invalido"
+                msg:"Tag ya eliminado o el ID proporcionado es invalido"
             })
         }
-        const article = await Article.findByIdAndDelete(id).populate('author')
+        const tag = await Tag.findByIdAndDelete(id)
         return res.status(200).json({
             ok: true,
-            msg: "Articulo eliminado exitosamente",
-            data: article,
+            msg: "Tag eliminado exitosamente",
+            data: tag,
         })
     } catch (error) {
             console.log(error);
