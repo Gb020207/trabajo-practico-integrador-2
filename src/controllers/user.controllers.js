@@ -25,3 +25,92 @@ export const createUser = async (req, res) => {
     }
     
 }
+export const getAllUser = async (req, res) => {
+    try {
+        const users = await User.find();
+        return res.json({
+            ok:true,
+            data: users
+        })
+
+    } catch (error) {
+        console.log(error);
+       return res.status(500).json({
+            ok:false,
+            msg:"Error del servidor"
+        })    
+    }
+    
+}
+export const getUserById = async (req,res) => {
+    const {id} = req.params;
+    try {
+        if(!id){
+            return res.status(400).json({
+                msg:"ID invalido, coloque un ID existente"
+            })
+        }
+        const user = await User.findById(id);
+        return res.status(200).json({
+            ok:true,
+            data: user
+        })
+    } catch (error) {
+        console.log(error);
+            return res.status(200).json({
+            ok:false,
+            msg:"Error del servidor",
+        })
+    }
+}
+export const updateUser = async (req, res) => {
+    const {id} = req.params;
+    const {username, email, password} = req.body;
+    try {
+         if(!id || !username || !email || !password){
+            return res.status(400).json({
+                msg:"ID invaido o los campos requeridos estan vacios"
+            })
+        }
+        const user = await User.findByIdAndUpdate(
+            id,
+            {username, email, password},
+            {new: true}
+
+        )
+        return res.status(201).json({
+            ok:true,
+            msg:"Usuario actualizado con exito",
+            data: user,
+        })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg:"Error del servidor",
+        })
+    }
+    
+}
+export const deleteUser = async (req, res) => {
+    const {id} = req.params;
+    try {
+           if(!id){
+            return res.status(400).json({
+                msg:"Usuario ya eliminado o el ID proporcionado es invalido"
+            })
+        }
+        const user = await User.findByIdAndDelete(id)
+        return res.status(200).json({
+            ok: true,
+            msg: "Usuario eliminado exitosamente",
+            data: user,
+        })
+    } catch (error) {
+            console.log(error);
+        return res.status(500).json({
+            ok: false,
+            msg:"Error del servidor",
+        }) 
+    }
+}
