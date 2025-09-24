@@ -11,13 +11,13 @@ const Userschema = new Schema({
     email:{
         type: String,
         required: true,
-        unique: true
-
+        unique: true,
+        match: [/^\S+@\S+\.\S+$/, "El email no es válido"]
     },
     password:{
         type: String,
         required: true,
-        unique: true
+        unique: false,
     },
     role:{
         type: String,

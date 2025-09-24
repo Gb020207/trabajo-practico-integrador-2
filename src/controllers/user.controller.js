@@ -1,6 +1,9 @@
 import { User } from "../models/user.models.js";
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
-export const createUser = async (req, res) => {
+
+export const createUser= async (req, res) => {
     const {username, email, password, role, profile} = req.body;
     try {
         if(username === "" || username === undefined || email === "" || email === undefined || password === "" || password === undefined || role === "" || role === undefined || profile === "" || profile === undefined){

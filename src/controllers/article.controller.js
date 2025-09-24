@@ -64,22 +64,23 @@ export const getArticleById = async (req,res) => {
 }
 export const updateArticle = async (req, res) => {
     const {id} = req.params;
-    const {title, content} = req.body;
+    const {title, content, tags} = req.body;
     try {
-         if(!id || !title || !content){
+         if(!id || !title || !content || !tags){
             return res.status(400).json({
                 msg:"ID invalido o los campos requeridos estan vacios"
             })
         }
         const article = await Article.findByIdAndUpdate(
             id,
-            {title, content},
+            {title, content,tags},
             {new: true}
 
         )
+        console.log(article)
         return res.status(201).json({
             ok:true,
-            msg:"Usuario actualizado con exito",
+            msg:"Articulo actualizado con exito",
             data: article,
         })
     } catch (error) {

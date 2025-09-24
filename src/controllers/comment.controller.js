@@ -30,7 +30,10 @@ export const createComment = async (req, res) => {
 }
 export const getAllComments = async (req, res) => {
     try {
-        const comments = await Comment.find();
+        const comments = await Comment.find(
+
+        ).populate("article")
+        .populate("author");
         return res.json({
             ok:true,
             data: comments,

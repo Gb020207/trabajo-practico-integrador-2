@@ -1,3 +1,4 @@
+import { Article } from "../models/article.model.js";
 import { Tag } from "../models/tag.models.js";
 
 
@@ -102,6 +103,10 @@ export const deleteTag = async (req, res) => {
             })
         }
         const tag = await Tag.findByIdAndDelete(id)
+        await Article.updateMany(
+            {tags:id},
+            {$pull: {tags:id}}
+        )
         return res.status(200).json({
             ok: true,
             msg: "Tag eliminado exitosamente",

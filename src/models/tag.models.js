@@ -1,4 +1,6 @@
 import { model, Schema } from "mongoose";
+import { Article } from "./article.model.js";
+
 
 const Tagschema = new Schema({
     name: {
@@ -17,5 +19,15 @@ const Tagschema = new Schema({
     timestamps:true,
     versionKey:false,
 })
+
+Tagschema.post("findOneAndDelete", async function (doc) {
+     if(doc){
+        await Article.updateMany(
+            {tags: doc._id} ,
+            {$pull: {tags: doc._id}}
+        )
+     }
+})
+
 
 export const Tag = model("Tag", Tagschema)

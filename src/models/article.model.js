@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-
+import { Comment } from "./comment.models.js";
 const articleSchema = new Schema({
     title :{
         type: String,
@@ -33,6 +33,16 @@ tags:[{
     ref: 'tag',
     required: false,
 }]
+})
+articleSchema.pre("findOneAndDelete", async function (next) {
+    const articleId = this.getQuery()._id;
+
+    console.log("Articulo eliminado", articleId);
+
+    await Comment.deleteMany({article: articleId});
+
+    next();
+    
 })
 
 export const Article = model("Article", articleSchema);
