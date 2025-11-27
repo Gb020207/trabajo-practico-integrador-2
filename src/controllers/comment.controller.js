@@ -56,7 +56,7 @@ export const getCommentById = async (req,res) => {
                 msg:"ID invalido, coloque un ID existente"
             })
         }
-        const comment = await Comment.findById(id);
+        const comment = await Comment.findById(id).populate("article");
         return res.status(200).json({
             ok:true,
             data: comment,

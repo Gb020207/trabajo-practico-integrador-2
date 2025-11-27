@@ -45,6 +45,23 @@ export const getAllUser = async (req, res) => {
     }
     
 }
+export const getAllUserAndDelete = async (req, res) => {
+    try {
+        const users = await User.find().setOptions({includeDelete: true});
+        return res.json({
+            ok:true,
+            data: users
+        })
+
+    } catch (error) {
+        console.log(error);
+       return res.status(500).json({
+            ok:false,
+            msg:"Error del servidor"
+        })    
+    }
+    
+}
 export const getUserById = async (req,res) => {
     const {id} = req.params;
     try {
@@ -78,7 +95,8 @@ export const updateUser = async (req, res) => {
         const user = await User.findByIdAndUpdate(
             id,
             {username, email, password},
-            {new: true}
+            {new: true},
+            {deleteAt: new Date()}
 
         )
         return res.status(201).json({
@@ -116,4 +134,31 @@ export const deleteUser = async (req, res) => {
             msg:"Error del servidor",
         }) 
     }
+}
+export const softDeleteUser = async (req,res) => {
+    const {id} = req.params;
+    try {
+        const user = await User.findByIdAndUpdate(
+            id,
+            {deleteAt: new Date()},
+            {new: true}
+        );
+
+        if(!user){
+            return res.status(400).json({
+                msg: "Usuario no encontrado coloque un id valido"
+            })
+        }
+        return res.status(200).json({
+            msg:"Usuario eliminado (soft delete)",
+            data: user,
+        })
+ 
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            msg:"error del servidor"
+        })
+    }
+    
 }

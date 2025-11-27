@@ -52,6 +52,10 @@ const Userschema = new Schema({
             type: Date,
             required: false,
         }
+    },
+    deleteAt:{
+        type: Date,
+        default: null,
     }
 },
 {
@@ -60,4 +64,19 @@ const Userschema = new Schema({
 },
 )
 
+
+Userschema.pre(/^find/, function(next){
+    if(!this.getOptions().includeDelete){
+        this.where({deleteAt: null})
+    };
+    next();
+})
+Userschema.method.softDelete = function(){
+    this.deleteAt = new Date();
+    return this.save();
+}
+Userschema.method.restoreUser = function(){
+    this.deleteAt = null;
+    return this.save();
+}
 export const User = model('User', Userschema)
